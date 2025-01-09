@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>نظام امتحان الجهاز المركزي</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        direction: rtl;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        margin: 50px auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        text-align: center;
+      }
+
+      h1,
+      h2 {
+        color: #333;
+      }
+
+      div#welcome-screen {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      button {
+        display: block;
+        padding: 10px;
+        background-color: #06896f;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 10px 0;
+        font-weight: 600;
+      }
+      button:hover {
+        background-color: #2a3139;
+      }
+
+      ol {
+        display: flex;
+        gap: 35px;
+        justify-content: center;
+        align-items: flex-start;
+        list-style: none;
+        font-weight: 900;
+      }
+      ul {
+        text-align: justify;
+        color: #2a2aef;
+      }
+
+      h3 {
+        text-align: justify;
+        margin-right: 33px;
+        text-decoration: underline;
+        font-size: 22px;
+      }
+      p {
+        margin-bottom: 0;
+      }
+
+      img {
+        width: 100px;
+        height: 100px;
+      }
+      .question {
+        margin-bottom: 20px;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      #timer {
+        font-size: 18px;
+        margin-bottom: 20px;
+        color: red;
+      }
+
+      #result {
+        margin-top: 20px;
+        font-size: 18px;
+        text-align: center;
+        color: green;
+      }
+
+      .active_test {
+        height: 27px;
+        background: #0adf98;
+        color: #caff00;
+        width: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        font-size: 18px;
+        border-radius: 5px;
+        font-weight: bolder;
+      }
+      .disactive_test {
+        height: 27px;
+        background: #606d68;
+        color: #ffffff;
+        width: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        font-size: 18px;
+        border-radius: 5px;
+      }
+
+      span {
+        color: red;
+      }
+
+      .color_list {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 11px;
+        margin-bottom: 30px;
+      }
+      .active_color {
+        width: 25px;
+        height: 25px;
+        background: #0adf98;
+        border-radius: 50%;
+      }
+
+      .disactive_color {
+        width: 25px;
+        height: 25px;
+        background: #606d68;
+        border-radius: 50%;
+      }
+
+      .color_list span {
+        color: #ff0000;
+        font-weight: 800;
+        font-size: 23px;
+      }
+
+      /*****************************/
+      .test-sections {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+      }
+
+      .test-item {
+        flex: 1 1 calc(33.33% - 20px); /* ثلاثة عناصر في كل صف */
+        max-width: calc(33.33% - 20px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .test-item img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+      }
+
+      @media (max-width: 768px) {
+        .test-item {
+          flex: 1 1 calc(50% - 20px); /* عنصرين في كل صف */
+          max-width: calc(50% - 20px);
+        }
+
+        .test_description {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        ol {
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+
+      /*****************/
+      div#behavior-screen {
+        border: 1px solid red;
+        padding: 50px;
+        position: relative;
+        margin-top: 25px;
+      }
+
+      #behavior-screen p {
+        color: #950000;
+        font-size: larger;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" id="main-container">
+      <!-- الصفحة الرئيسية -->
+      <div id="welcome-screen">
+        <h1>مرحباً بك في امتحان الجهاز المركزي</h1>
+        <button onclick="startExam()">البدأ</button>
+      </div>
+
+      <!-- صفحة المحاور -->
+      <div id="section-screen" class="hidden">
+        <h3 style="color: red">نفيدكم علما بالتالي</h3>
+        <ul>
+          <li>
+            ترتيب الامتحانات كما هو موضح بالشكل التالي ابتداء بامتحانات الجدرات
+            السلوكية.
+          </li>
+          <li>حفظ الإجابة يتم باختيار احدي الإجابات ثم الضغط علي التالي</li>
+        </ul>
+        <div class="color_list">
+          <div class="active_color"></div>
+          <span>مفعل</span>
+          <div class="disactive_color"></div>
+          <span>غير مفعل</span>
+        </div>
+
+        <ol>
+          <div class="test_description">
+            <img src="./01-B.png" />
+            <li class="active_test">محور الجدرات السلوكية</li>
+            <p>اختبار لقياس ١٢ سمة شخصية</p>
+          </div>
+          <div class="test_description">
+            <img src="./Computer-benefits-1024x712.webp" />
+            <li class="disactive_test">محور الحاسب</li>
+            <p>اختبار لقياس مهارات استخدام الحاسب الالي</p>
+            <span> (متاح باللغتين العربية والانجليزية)</span>
+          </div>
+          <div class="test_description">
+            <img src="./images.jpg" />
+            <li class="disactive_test">محور الكفايات اللغوية</li>
+            <p>اختبار لقياس مهارات استخدام اللغات مثل</p>
+            <span> (العربية/الإنجليزية...)</span>
+          </div>
+          <div class="test_description">
+            <img src="./images (1).jpg" />
+            <li class="disactive_test">محور المعلومات العامة</li>
+            <p>اختبار لقياس مهارات المعرفة العامة في عدة مجالات مثل</p>
+            <span>(التاريخ / الجغرافيا / الحساب....)</span>
+          </div>
+          <div class="test_description">
+            <img src="./images (2).jpg" />
+            <li class="disactive_test">محور التخصص</li>
+            <p>اختبار لقياس مهارات المعرفة المهنية في مجال تخصص معين</p>
+          </div>
+        </ol>
+        <button onclick="startBehaviorTest()">بدء الامتحان</button>
+      </div>
+
+      <!-- صفحة الجدرات السلوكية -->
+      <div id="behavior-screen" class="hidden">
+        <button
+          class="intro"
+          style="
+            background: #9d0000;
+            width: 100px;
+            text-align: center;
+            position: absolute;
+            top: -34px;
+            left: 50%;
+            right: 50%;
+          "
+        >
+          مقدمة
+        </button>
+        <h2>المحور الاول: محور الجدرات السلوكية</h2>
+
+        <p s>
+          نوع الاختبار: امتحان جدارات سلوكية يقيس مجموعة من السمات السلوكية هي
+          الدفاعية للانجاز، الاتزان الوجداني، فعالية الاتصال، كفاءة التعامل مع
+          الواقع والأداء والإبداع، الالتزام والانضباط، الانفتاح على الخبرة،
+          الثقة بالنفس، توكيد الذات، العمل الجماعي، اتخاذ القرار.
+        </p>
+        <p s>عدد الأسئلة: 234 أسئلة اختيار من متعدد.</p>
+        <p s>مدة الاختبار: 59 دقيقة.</p>
+        <button onclick="startBehaviorQuiz()">بدء الاختبار</button>
+      </div>
+
+      <!-- صفحة الأسئلة -->
+      <div id="quiz-screen" class="hidden">
+        <div id="timer">الوقت: 5</div>
+        <div id="question-container"></div>
+        <button id="next-button" onclick="nextQuestion()">التالي</button>
+      </div>
+
+      <!-- صفحة اختيار الكفايات اللغوية -->
+      <div id="language-screen" class="hidden">
+        <h2>محور الكفايات اللغوية</h2>
+        <button onclick="startArabicTest()">بدء اختبار العربي</button>
+        <button onclick="startEnglishTest()">بدء اختبار الإنجليزي</button>
+      </div>
+
+      <!-- صفحة النتائج -->
+      <div id="result-screen" class="hidden">
+        <h2>تم الانتهاء من الاختبار</h2>
+        <button id="next-section-button" onclick="nextSection()">
+          المحور التالي
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const questions = {
+        behavior: [
+          {
+            q: "ما هي عاصمة مصر؟",
+            options: ["القاهرة", "الإسكندرية", "الأقصر", "أسوان"],
+            answer: 0,
+          },
+          {
+            q: "ما هو أكبر نهر في العالم؟",
+            options: ["النيل", "الأمازون", "الدانوب", "اليانغتسي"],
+            answer: 1,
+          },
+          {
+            q: "ما هو أصغر قارة؟",
+            options: ["أفريقيا", "أوروبا", "أستراليا", "آسيا"],
+            answer: 2,
+          },
+          {
+            q: "ما هي اللغة الأكثر انتشاراً؟",
+            options: ["الإنجليزية", "الإسبانية", "الصينية", "العربية"],
+            answer: 2,
+          },
+        ],
+        arabic: [
+          {
+            q: "ما هو مرادف كلمة 'ذكي'؟",
+            options: ["غبي", "نبيه", "جاهل", "كسول"],
+            answer: 1,
+          },
+          {
+            q: "ما هو مضاد كلمة 'كريم'؟",
+            options: ["بخيل", "لطيف", "شجاع", "طماع"],
+            answer: 0,
+          },
+        ],
+        english: [
+          {
+            q: "What is the capital of France?",
+            options: ["Paris", "London", "Berlin", "Rome"],
+            answer: 0,
+          },
+          { q: "What is 2 + 2?", options: ["3", "4", "5", "6"], answer: 1 },
+        ],
+      };
+
+      let currentQuestionIndex = 0;
+      let currentSection = "behavior";
+      let score = 0;
+      let timer;
+
+      function startExam() {
+        document.getElementById("welcome-screen").classList.add("hidden");
+        document.getElementById("section-screen").classList.remove("hidden");
+        // إخفاء الزرار بعد الضغط عليه
+        document
+          .querySelector("#welcome-screen button")
+          .classList.add("hidden");
+      }
+
+      function startBehaviorTest() {
+        document.getElementById("section-screen").classList.add("hidden");
+        document.getElementById("behavior-screen").classList.remove("hidden");
+      }
+
+      function startBehaviorQuiz() {
+        currentSection = "behavior";
+        startQuiz();
+      }
+
+      function startArabicTest() {
+        currentSection = "arabic";
+        startQuiz();
+      }
+
+      function startEnglishTest() {
+        currentSection = "english";
+        startQuiz();
+      }
+
+      function startQuiz() {
+        document.getElementById("behavior-screen").classList.add("hidden");
+        document.getElementById("language-screen").classList.add("hidden");
+        document.getElementById("quiz-screen").classList.remove("hidden");
+        currentQuestionIndex = 0;
+        score = 0;
+        loadQuestion();
+        startTimer();
+      }
+
+      function loadQuestion() {
+        const question = questions[currentSection][currentQuestionIndex];
+        const container = document.getElementById("question-container");
+        container.innerHTML = `
+        <p>${question.q}</p>
+        ${question.options
+          .map(
+            (opt, i) =>
+              `<label><input type="radio" name="answer" value="${i}"> ${opt}</label><br>`
+          )
+          .join("")}
+      `;
+      }
+
+      function nextQuestion() {
+        const selectedOption = document.querySelector(
+          'input[name="answer"]:checked'
+        );
+        if (selectedOption) {
+          const answer = parseInt(selectedOption.value);
+          if (
+            answer === questions[currentSection][currentQuestionIndex].answer
+          ) {
+            score++;
+          }
+        }
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions[currentSection].length) {
+          loadQuestion();
+        } else {
+          endQuiz();
+        }
+      }
+
+      function startTimer() {
+        let time = 5;
+        document.getElementById("timer").textContent = `الوقت: ${time}`;
+        timer = setInterval(() => {
+          time--;
+          document.getElementById("timer").textContent = `الوقت: ${time}`;
+          if (time === 0) {
+            clearInterval(timer);
+            nextQuestion();
+          }
+        }, 1000);
+      }
+
+      function endQuiz() {
+        clearInterval(timer);
+        document.getElementById("quiz-screen").classList.add("hidden");
+        document.getElementById("result-screen").classList.remove("hidden");
+      }
+
+      function nextSection() {
+        if (currentSection === "behavior") {
+          document.getElementById("result-screen").classList.add("hidden");
+          document.getElementById("language-screen").classList.remove("hidden");
+        } else {
+          alert("تم الانتهاء من جميع المحاور!");
+        }
+      }
+    </script>
+  </body>
+</html>
