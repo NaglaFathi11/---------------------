@@ -1,0 +1,176 @@
+body {
+  font-family: Arial, sans-serif;
+  direction: rtl;
+  background-color: #f9f9f9;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  margin: 50px auto;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: start;
+}
+
+h1,
+h2 {
+  color: #333;
+}
+
+#welcome-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* height: 100vh;*/
+}
+
+button {
+  display: block;
+  padding: 10px 20px;
+  background-color: #06896f;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  margin: 10px auto;
+  font-weight: 600;
+}
+
+button:hover {
+  background-color: #2a3139;
+}
+
+ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 35px;
+  justify-content: center;
+  align-items: flex-start;
+  list-style: none;
+  padding: 0;
+  font-weight: 900;
+}
+
+ul {
+  text-align: justify;
+  color: #2a2aef;
+}
+
+h3 {
+  text-align: justify;
+  margin-right: 33px;
+  text-decoration: underline;
+  font-size: 22px;
+}
+
+p {
+  margin-bottom: 0;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.hidden {
+  display: none;
+}
+
+#timer {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: red;
+  font-weight: bold;
+}
+
+#question-container {
+  margin: 20px 0;
+  padding: 15px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+#result-screen h2,
+#next-section-screen h2 {
+  color: green;
+  text-align: center;
+}
+
+.active_test {
+  background: #0adf98;
+  color: #000;
+  width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  font-size: 18px;
+  border-radius: 5px;
+  font-weight: bolder;
+}
+
+.disactive_test {
+  background: #606d68;
+  color: #ffffff;
+  width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  font-size: 18px;
+  border-radius: 5px;
+}
+
+.color_list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 30px;
+}
+
+.active_color,
+.disactive_color {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+}
+
+.active_color {
+  background: #0adf98;
+}
+
+.disactive_color {
+  background: #606d68;
+}
+
+.color_list span {
+  color: #ff0000;
+  font-weight: 800;
+  font-size: 23px;
+}
+
+.test_description {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+#next-section-screen {
+  text-align: center;
+  padding: 30px;
+  background-color: #fff8dc;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin: 20px auto;
+  max-width: 500px;
+}
