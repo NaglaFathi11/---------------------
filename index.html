@@ -4,157 +4,439 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>نظام امتحان الجهاز المركزي</title>
-    <!-- ملف الـ CSS هبعته بعد كده (style.css) -->
-    <link rel="stylesheet" href="./style.css" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        direction: rtl;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        margin: 50px auto;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: start;
+      }
+      h1,
+      h2 {
+        color: #333;
+      }
+      #welcome-screen {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      button {
+        display: block;
+        padding: 10px 20px;
+        background-color: #06896f;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 10px auto;
+        font-weight: 600;
+      }
+      button:hover {
+        background-color: #2a3139;
+      }
+      button:disabled {
+        background-color: #606d68;
+        cursor: not-allowed;
+      }
+      ol {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 35px;
+        justify-content: center;
+        align-items: flex-start;
+        list-style: none;
+        padding: 0;
+        font-weight: 900;
+      }
+      ul {
+        text-align: justify;
+        color: #2a2aef;
+      }
+      h3 {
+        text-align: justify;
+        margin-right: 33px;
+        text-decoration: underline;
+        font-size: 22px;
+      }
+      p {
+        margin-bottom: 0;
+        font-size: 18px;
+        line-height: 1.6;
+      }
+      img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 6px;
+      }
+      .hidden {
+        display: none;
+      }
+      #timer {
+        font-size: 18px;
+        margin-bottom: 20px;
+        color: red;
+        font-weight: bold;
+      }
+      #question-container {
+        margin: 20px 0;
+        padding: 15px;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+      }
+      .active_test {
+        background: #0adf98;
+        color: #000;
+        width: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        font-size: 18px;
+        border-radius: 5px;
+        font-weight: bolder;
+      }
+      .disactive_test {
+        background: #606d68;
+        color: #ffffff;
+        width: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        font-size: 18px;
+        border-radius: 5px;
+      }
+      .color_list {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 11px;
+        margin-bottom: 30px;
+      }
+      .active_color,
+      .disactive_color {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+      }
+      .active_color {
+        background: #0adf98;
+      }
+      .disactive_color {
+        background: #606d68;
+      }
+      .color_list span {
+        color: #ff0000;
+        font-weight: 800;
+        font-size: 23px;
+      }
+      .test_description {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+      #next-section-screen {
+        text-align: center;
+        padding: 30px;
+        background-color: #fff8dc;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        margin: 20px auto;
+        max-width: 500px;
+      }
+      .lang-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+      }
+      .lang-buttons button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+      }
+      .lang-buttons img {
+        width: 50px;
+        height: 50px;
+      }
+    </style>
   </head>
   <body>
     <div class="container" id="main-container">
-      <!-- الصفحة الترحيبية -->
+      <!-- الصفحة الرئيسية -->
       <div id="welcome-screen">
         <h1>مرحباً بك في امتحان الجهاز المركزي</h1>
         <button onclick="startExam()" id="start-button">البدء</button>
       </div>
 
-      <!-- شاشة اختيار المحاور -->
+      <!-- صفحة المحاور -->
       <div id="section-screen" class="hidden">
         <h3 style="color: red">نفيدكم علماً بالتالي</h3>
         <ul>
           <li>
-            ترتيب الامتحانات كما هو موضح بالشكل التالي ابتداءً بامتحانات
-            الجدارات السلوكية.
+            ترتيب الامتحانات كما هو موضح بالشكل التالي ابتداءً بامتحانات الجدرات
+            السلوكية.
           </li>
           <li>حفظ الإجابة يتم باختيار إحدى الإجابات ثم الضغط على التالي.</li>
         </ul>
-
         <div class="color_list">
           <div class="active_color"></div>
           <span>مفعل</span>
           <div class="disactive_color"></div>
           <span>غير مفعل</span>
         </div>
-
-        <!-- قائمة المحاور: احفظي الـ id لكل محور عشان الـ JS يتعامل معاها -->
-        <ol id="sections-list">
-          <div class="test_description" id="behavior" title="جدارات سلوكية">
-            <img
-              src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3&s=3f1c9c3a2f2b4b35dbd0b2a6b3d6c8a7"
-              alt="جدارات سلوكية"
-            />
+        <ol id="section-list">
+          <div class="test_description" data-section="behavior">
+            <img src="https://i.ibb.co/c6X9VtD/behavior.jpg" />
             <li class="active_test">جدارات سلوكية</li>
             <p>اختبار لقياس ١٢ سمة شخصية</p>
           </div>
-
-          <div class="test_description" id="job" title="جدارات وظيفية">
-            <img
-              src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3&s=8f2d7d0e5f6d9b8a3c4e5f6a1b2c3d4e"
-              alt="جدارات وظيفية"
-            />
+          <div class="test_description" data-section="job">
+            <img src="https://i.ibb.co/ZVmr9x5/job.jpg" />
             <li class="disactive_test">جدارات وظيفية</li>
             <p>قياس الجدارات المطلوبة للمجال</p>
           </div>
-
-          <!-- IQ: أيقونة واحدة تجمع الصور والمتتاليات -->
-          <div
-            class="test_description"
-            id="iq"
-            title="اختبار الذكاء (صور + متتاليات)"
-          >
-            <img
-              src="https://images.unsplash.com/photo-1559757175-5703b5a0e3f8?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3&s=2b7a7f4c6a9d6c1b7f2e4d8f9a0c1b2c"
-              alt="اختبار الذكاء"
-            />
-            <li class="disactive_test">اختبار الذكاء (صور + متتاليات)</li>
-            <p>تحليل الأنماط البصرية والعددية — يبدأ بالصور ثم المتتاليات</p>
+          <div class="test_description" data-section="iq">
+            <img src="https://i.ibb.co/B3bF2CP/iq.jpg" />
+            <li class="disactive_test">اختبار IQ</li>
+            <p>صور + متتاليات</p>
           </div>
-
-          <!-- اللغة: اختيار أيقونتين (عربي / إنجليزي) — عند الضغط تظهر أيقونات داخل شاشة منفصلة -->
-          <div
-            class="test_description"
-            id="language"
-            title="اللغة (عربي/إنجليزي)"
-          >
-            <img
-              src="https://images.unsplash.com/photo-1529070538774-1843cb3265df?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3&s=9b8f7d6c5a4b3c2d1e0f1a2b3c4d5e6f"
-              alt="اللغة"
-            />
-            <li class="disactive_test">اللغة (عربي / إنجليزي)</li>
-            <p>اختبر العربية ثم الإنجليزية (أو اختاري الترتيب)</p>
+          <div class="test_description" data-section="language">
+            <img src="https://i.ibb.co/0VPHn2C/language.jpg" />
+            <li class="disactive_test">اللغة</li>
+            <p>اختبار عربي + إنجليزي</p>
           </div>
-
-          <div class="test_description" id="general" title="معلومات عامة">
-            <img
-              src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3&s=1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d"
-              alt="معلومات عامة"
-            />
+          <div class="test_description" data-section="general">
+            <img src="https://i.ibb.co/0fbhdfP/general.jpg" />
             <li class="disactive_test">معلومات عامة</li>
-            <p>معرفة عامة (تاريخ، جغرافيا...)</p>
+            <p>تاريخ وجغرافيا وغيرها</p>
           </div>
-
-          <div class="test_description" id="computer" title="الحاسب">
-            <img
-              src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3&s=7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d"
-              alt="الحاسب"
-            />
+          <div class="test_description" data-section="computer">
+            <img src="https://i.ibb.co/X7CLrFG/computer.jpg" />
             <li class="disactive_test">الحاسب</li>
-            <p>العربية أو الإنجليزية</p>
+            <p>عربي أو إنجليزي</p>
           </div>
-
-          <div class="test_description" id="specialization" title="التخصص">
-            <img
-              src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3&s=0c1a2b3d4e5f6a7b8c9d0e1f2a3b4c5d"
-              alt="التخصص"
-            />
+          <div class="test_description" data-section="specialization">
+            <img src="https://i.ibb.co/k1DgYz6/specialization.jpg" />
             <li class="disactive_test">التخصص</li>
             <p>اختبار في التخصص المطلوب</p>
           </div>
         </ol>
-
-        <!-- زر بدء أول محور (ممكن نخلّيه يختار أول محور مفعل أو نضغط على أيقونة المحور) -->
-        <div style="text-align: center; margin-top: 15px">
-          <button id="start-first" onclick="startBehaviorTest()">
-            بدء الامتحان
-          </button>
-        </div>
       </div>
 
-      <!-- شاشة الامتحان (محتوى الأسئلة يتم توليده ديناميكياً من JS) -->
+      <!-- شاشة الامتحان -->
       <div id="quiz-screen" class="hidden">
         <div id="timer">الوقت:</div>
         <div id="question-container"></div>
-        <div style="text-align: center; margin-top: 12px">
-          <button id="next-button" onclick="nextQuestion()">التالي</button>
-        </div>
+        <button id="next-button" onclick="nextQuestion()">التالي</button>
       </div>
 
-      <!-- شاشة اختيار اللغة (تظهر أيقونات عربية/إنجليزية جنب بعض بدل زرارين) -->
-      <div id="language-screen" class="hidden">
-        <h2>اختر اختبار اللغة</h2>
-        <div class="language-icons">
-          <div class="lang-item" id="lang-ar" title="اختبار العربي">
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Flag_of_Egypt.svg"
-              alt="علم مصر"
-            />
-            <p>العربي</p>
-          </div>
-          <div class="lang-item" id="lang-en" title="اختبار الإنجليزي">
-            <img
-              src="https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg"
-              alt="علم إنجلترا/أمريكا"
-            />
-            <p>الإنجليزي</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- شاشة النتيجة البسيطة -->
+      <!-- شاشة النتيجة -->
       <div id="result-screen" class="hidden"></div>
 
-      <!-- شاشة الانتقال بين المحاور: تعرض "انتهى المحور" وصورة المحور التالي واسم المحور -->
+      <!-- شاشة المحور التالي -->
       <div id="next-section-screen" class="hidden"></div>
     </div>
 
-    <!-- ملف الـ JS هبعته بعد كده (script.js) -->
-    <script src="./script.js"></script>
+    <script>
+      const allQuestions = {
+        behavior: [
+          { q: "ما هي عاصمة مصر؟", options: ["القاهرة", "الإسكندرية", "الأقصر", "أسوان"], answer: 0 },
+          { q: "ما هو أكبر نهر في العالم؟", options: ["النيل", "الأمازون", "الدانوب", "اليانغتسي"], answer: 1 },
+        ],
+        job: [{ q: "ما هو دورك في الوظيفة؟", options: ["إدارة", "دعم"], answer: 0 }],
+        iq_images: [{ q: "اختر الصورة المناسبة للنمط", options: ["A", "B", "C", "D"], answer: 2 }],
+        iq_sequences: [{ q: "اكمل: 2, 4, 6, ?", options: ["7", "8", "9", "10"], answer: 1 }],
+        arabic: [{ q: "مرادف 'ذكي'؟", options: ["غبي", "نبيه", "كسول", "مغرور"], answer: 1 }],
+        english: [{ q: "Synonym of 'smart'?", options: ["Dumb", "Clever", "Lazy", "Mean"], answer: 1 }],
+        general: [{ q: "أين تقع الأهرامات؟", options: ["القاهرة", "الجيزة", "الأقصر"], answer: 1 }],
+        computer_ar: [{ q: "ما هو نظام التشغيل؟", options: ["ويندوز", "ورد"], answer: 0 }],
+        computer_en: [{ q: "What is an OS?", options: ["Windows", "Excel"], answer: 0 }],
+        specialization: [{ q: "ما هي لغة تصميم المواقع؟", options: ["HTML", "C++"], answer: 0 }],
+      };
+
+      const sectionOrder = ["behavior", "job", "iq", "language", "general", "computer", "specialization"];
+
+      let currentSectionIndex = 0;
+      let currentQuestionIndex = 0;
+      let currentSection = null;
+      let score = 0;
+      let timer;
+      let sectionDone = { arabic: false, english: false };
+
+      function startExam() {
+        document.getElementById("welcome-screen").classList.add("hidden");
+        document.getElementById("section-screen").classList.remove("hidden");
+      }
+
+      function launchQuiz(sectionKey) {
+        if (sectionKey === "iq") {
+          // ابدأ الصور أولاً
+          currentSection = "iq_images";
+          currentQuestionIndex = 0;
+          score = 0;
+          showQuizScreen();
+          loadQuestion();
+          startTimer();
+        } else {
+          currentSection = sectionKey;
+          currentQuestionIndex = 0;
+          score = 0;
+          showQuizScreen();
+          loadQuestion();
+          startTimer();
+        }
+      }
+
+      function showQuizScreen() {
+        document.getElementById("quiz-screen").classList.remove("hidden");
+        document.getElementById("result-screen").classList.add("hidden");
+        document.getElementById("next-section-screen").classList.add("hidden");
+      }
+
+      function loadQuestion() {
+        const question = allQuestions[currentSection][currentQuestionIndex];
+        const container = document.getElementById("question-container");
+        container.innerHTML = `<p>${question.q}</p>` +
+          question.options.map((opt, i) => `<label><input type="radio" name="answer" value="${i}" /> ${opt}</label><br />`).join("");
+      }
+
+      function nextQuestion() {
+        const selected = document.querySelector("input[name='answer']:checked");
+        if (selected) {
+          const value = parseInt(selected.value);
+          if (value === allQuestions[currentSection][currentQuestionIndex].answer) {
+            score++;
+          }
+        }
+        currentQuestionIndex++;
+        if (currentQuestionIndex < allQuestions[currentSection].length) {
+          loadQuestion();
+        } else {
+          endQuiz();
+        }
+      }
+
+      function startTimer() {
+        clearInterval(timer);
+        const totalQuestions = allQuestions[currentSection].length;
+        let time = totalQuestions * 30;
+        const timerDiv = document.getElementById("timer");
+        timerDiv.textContent = `الوقت: ${time}`;
+        timer = setInterval(() => {
+          time--;
+          timerDiv.textContent = `الوقت: ${time}`;
+          if (time <= 0) {
+            clearInterval(timer);
+            endQuiz();
+          }
+        }, 1000);
+      }
+
+      function endQuiz() {
+        clearInterval(timer);
+        document.getElementById("quiz-screen").classList.add("hidden");
+
+        // حالة الـ IQ: بعد الصور يبدأ المتتاليات
+        if (currentSection === "iq_images") {
+          currentSection = "iq_sequences";
+          currentQuestionIndex = 0;
+          score = 0;
+          showQuizScreen();
+          loadQuestion();
+          startTimer();
+          return;
+        } else if (currentSection === "iq_sequences") {
+          showNextSectionScreen();
+          return;
+        }
+
+        // حالة اللغة
+        if (currentSection === "arabic" || currentSection === "english") {
+          sectionDone[currentSection] = true;
+          if (sectionDone.arabic && sectionDone.english) {
+            showNextSectionScreen();
+          } else {
+            showLanguageChoice();
+          }
+          return;
+        }
+
+        showNextSectionScreen();
+      }
+
+      function showNextSectionScreen() {
+        document.getElementById("next-section-screen").classList.remove("hidden");
+        const nextSection = sectionOrder[currentSectionIndex + 1];
+        const nextName = translateSection(nextSection);
+        document.getElementById("next-section-screen").innerHTML = `
+          <h2>انتهى المحور: ${translateSection(currentSection)}</h2>
+          <p>المحور التالي:</p>
+          <div class="test_description">
+            <img src="${document.querySelector(\`[data-section="\${nextSection}"] img\`).src}" />
+            <li class="active_test">${nextName}</li>
+          </div>
+          <button onclick="goToNextSection()">ابدأ الآن</button>
+        `;
+      }
+
+      function goToNextSection() {
+        currentSectionIndex++;
+        const next = sectionOrder[currentSectionIndex];
+        if (!next) {
+          alert("انتهت جميع المحاور!");
+          return;
+        }
+        if (next === "language") {
+          showLanguageChoice();
+        } else {
+          launchQuiz(next);
+        }
+      }
+
+      function showLanguageChoice() {
+        document.getElementById("result-screen").classList.remove("hidden");
+        document.getElementById("result-screen").innerHTML = `
+          <h2>اختر اختبار اللغة:</h2>
+          <div class="lang-buttons">
+            <button onclick="launchQuiz('arabic')" ${sectionDone.arabic ? "disabled" : ""}>
+              <img src="https://i.ibb.co/0VPHn2C/language.jpg" /> عربي
+            </button>
+            <button onclick="launchQuiz('english')" ${sectionDone.english ? "disabled" : ""}>
+              <img src="https://i.ibb.co/0VPHn2C/language.jpg" /> English
+            </button>
+          </div>
+        `;
+      }
+
+      function translateSection(key) {
+        const map = {
+          behavior: "جدارات سلوكية",
+          job: "جدارات وظيفية",
+          iq: "اختبار IQ",
+          iq_images: "اختبار صور",
+          iq_sequences: "اختبار متتاليات",
+          language: "اللغة",
+          arabic: "كفايات لغوية - عربي",
+          english: "كفايات لغوية - إنجليزي",
+          general: "معلومات عامة",
+          computer: "الحاسب",
+          specialization: "التخصص"
+        };
+        return map[key] || key;
+      }
+    </script>
   </body>
 </html>
