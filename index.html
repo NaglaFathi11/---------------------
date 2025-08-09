@@ -4,21 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>نظام امتحان الجهاز المركزي</title>
+    <!-- ملف الـ CSS هبعته بعد كده (style.css) -->
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
     <div class="container" id="main-container">
-      <!-- الصفحة الرئيسية -->
+      <!-- الصفحة الترحيبية -->
       <div id="welcome-screen">
         <h1>مرحباً بك في امتحان الجهاز المركزي</h1>
         <button onclick="startExam()" id="start-button">البدء</button>
       </div>
 
-      <!-- صفحة المحاور -->
+      <!-- شاشة اختيار المحاور -->
       <div id="section-screen" class="hidden">
         <h3 style="color: red">نفيدكم علماً بالتالي</h3>
         <ul>
-          <li>ترتيب الامتحانات كما هو موضح بالشكل التالي.</li>
+          <li>
+            ترتيب الامتحانات كما هو موضح بالشكل التالي ابتداءً بامتحانات
+            الجدارات السلوكية.
+          </li>
           <li>حفظ الإجابة يتم باختيار إحدى الإجابات ثم الضغط على التالي.</li>
         </ul>
 
@@ -29,73 +33,128 @@
           <span>غير مفعل</span>
         </div>
 
+        <!-- قائمة المحاور: احفظي الـ id لكل محور عشان الـ JS يتعامل معاها -->
         <ol id="sections-list">
-          <div class="test_description" id="behavior">
+          <div class="test_description" id="behavior" title="جدارات سلوكية">
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Thinking-woman.jpg"
+              src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3&s=3f1c9c3a2f2b4b35dbd0b2a6b3d6c8a7"
+              alt="جدارات سلوكية"
             />
             <li class="active_test">جدارات سلوكية</li>
             <p>اختبار لقياس ١٢ سمة شخصية</p>
           </div>
-          <div class="test_description" id="job">
+
+          <div class="test_description" id="job" title="جدارات وظيفية">
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/7/77/Teamwork.jpg"
+              src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3&s=8f2d7d0e5f6d9b8a3c4e5f6a1b2c3d4e"
+              alt="جدارات وظيفية"
             />
             <li class="disactive_test">جدارات وظيفية</li>
             <p>قياس الجدارات المطلوبة للمجال</p>
           </div>
-          <div class="test_description" id="iq">
+
+          <!-- IQ: أيقونة واحدة تجمع الصور والمتتاليات -->
+          <div
+            class="test_description"
+            id="iq"
+            title="اختبار الذكاء (صور + متتاليات)"
+          >
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Puzzle.jpg"
+              src="https://images.unsplash.com/photo-1559757175-5703b5a0e3f8?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3&s=2b7a7f4c6a9d6c1b7f2e4d8f9a0c1b2c"
+              alt="اختبار الذكاء"
             />
             <li class="disactive_test">اختبار الذكاء (صور + متتاليات)</li>
-            <p>تحليل الأنماط البصرية والعددية</p>
+            <p>تحليل الأنماط البصرية والعددية — يبدأ بالصور ثم المتتاليات</p>
           </div>
-          <div class="test_description" id="language">
+
+          <!-- اللغة: اختيار أيقونتين (عربي / إنجليزي) — عند الضغط تظهر أيقونات داخل شاشة منفصلة -->
+          <div
+            class="test_description"
+            id="language"
+            title="اللغة (عربي/إنجليزي)"
+          >
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Language.jpg"
+              src="https://images.unsplash.com/photo-1529070538774-1843cb3265df?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3&s=9b8f7d6c5a4b3c2d1e0f1a2b3c4d5e6f"
+              alt="اللغة"
             />
             <li class="disactive_test">اللغة (عربي / إنجليزي)</li>
-            <p>اختبار اللغتين</p>
+            <p>اختبر العربية ثم الإنجليزية (أو اختاري الترتيب)</p>
           </div>
-          <div class="test_description" id="general">
+
+          <div class="test_description" id="general" title="معلومات عامة">
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/f/f7/World-map.jpg"
+              src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3&s=1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d"
+              alt="معلومات عامة"
             />
             <li class="disactive_test">معلومات عامة</li>
-            <p>تاريخ، جغرافيا...</p>
+            <p>معرفة عامة (تاريخ، جغرافيا...)</p>
           </div>
-          <div class="test_description" id="computer">
+
+          <div class="test_description" id="computer" title="الحاسب">
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/5/51/Laptop.jpg"
+              src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3&s=7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d"
+              alt="الحاسب"
             />
             <li class="disactive_test">الحاسب</li>
-            <p>عربي أو إنجليزي</p>
+            <p>العربية أو الإنجليزية</p>
           </div>
-          <div class="test_description" id="specialization">
+
+          <div class="test_description" id="specialization" title="التخصص">
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/3/3b/Workstation.jpg"
+              src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3&s=0c1a2b3d4e5f6a7b8c9d0e1f2a3b4c5d"
+              alt="التخصص"
             />
             <li class="disactive_test">التخصص</li>
-            <p>اختبار التخصص المطلوب</p>
+            <p>اختبار في التخصص المطلوب</p>
           </div>
         </ol>
+
+        <!-- زر بدء أول محور (ممكن نخلّيه يختار أول محور مفعل أو نضغط على أيقونة المحور) -->
+        <div style="text-align: center; margin-top: 15px">
+          <button id="start-first" onclick="startBehaviorTest()">
+            بدء الامتحان
+          </button>
+        </div>
       </div>
 
-      <!-- شاشة الامتحان -->
+      <!-- شاشة الامتحان (محتوى الأسئلة يتم توليده ديناميكياً من JS) -->
       <div id="quiz-screen" class="hidden">
         <div id="timer">الوقت:</div>
         <div id="question-container"></div>
-        <button id="next-button" onclick="nextQuestion()">التالي</button>
+        <div style="text-align: center; margin-top: 12px">
+          <button id="next-button" onclick="nextQuestion()">التالي</button>
+        </div>
       </div>
 
-      <!-- شاشة النتيجة -->
+      <!-- شاشة اختيار اللغة (تظهر أيقونات عربية/إنجليزية جنب بعض بدل زرارين) -->
+      <div id="language-screen" class="hidden">
+        <h2>اختر اختبار اللغة</h2>
+        <div class="language-icons">
+          <div class="lang-item" id="lang-ar" title="اختبار العربي">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Flag_of_Egypt.svg"
+              alt="علم مصر"
+            />
+            <p>العربي</p>
+          </div>
+          <div class="lang-item" id="lang-en" title="اختبار الإنجليزي">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg"
+              alt="علم إنجلترا/أمريكا"
+            />
+            <p>الإنجليزي</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- شاشة النتيجة البسيطة -->
       <div id="result-screen" class="hidden"></div>
 
-      <!-- شاشة الانتقال للمحور التالي -->
+      <!-- شاشة الانتقال بين المحاور: تعرض "انتهى المحور" وصورة المحور التالي واسم المحور -->
       <div id="next-section-screen" class="hidden"></div>
     </div>
 
+    <!-- ملف الـ JS هبعته بعد كده (script.js) -->
     <script src="./script.js"></script>
   </body>
 </html>

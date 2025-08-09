@@ -1,143 +1,186 @@
-const allQuestions = {
+// عناصر واجهة المستخدم
+const welcomeScreen = document.getElementById("welcome-screen");
+const sectionScreen = document.getElementById("section-screen");
+const quizScreen = document.getElementById("quiz-screen");
+const languageScreen = document.getElementById("language-screen");
+const resultScreen = document.getElementById("result-screen");
+const nextSectionScreen = document.getElementById("next-section-screen");
+
+let currentSection = null;
+let questionIndex = 0;
+let currentQuestions = [];
+let completedSections = new Set();
+let timerInterval = null;
+
+// أسئلة تجريبية لكل محور
+const questions = {
   behavior: [
-    { q: "ما هي عاصمة مصر؟", options: ["القاهرة", "الإسكندرية", "الأقصر", "أسوان"], answer: 0 },
+    { q: "سؤال جدارات سلوكية 1؟", options: ["أ", "ب", "ج"], answer: 0 },
+    { q: "سؤال جدارات سلوكية 2؟", options: ["أ", "ب", "ج"], answer: 1 }
   ],
   job: [
-    { q: "ما هو دورك في الوظيفة؟", options: ["إدارة", "دعم"], answer: 0 },
+    { q: "سؤال جدارات وظيفية 1؟", options: ["أ", "ب", "ج"], answer: 0 }
   ],
   iq_images: [
-    { q: "اختر الصورة المناسبة للنمط", options: ["A", "B", "C", "D"], answer: 2 },
+    { q: "سؤال ذكاء صور 1؟", options: ["أ", "ب"], answer: 0 }
   ],
   iq_sequences: [
-    { q: "اكمل: 2, 4, 6, ?", options: ["7", "8", "9", "10"], answer: 1 },
+    { q: "سؤال ذكاء متتاليات 1؟", options: ["1", "2"], answer: 1 }
   ],
-  arabic: [
-    { q: "مرادف 'ذكي'؟", options: ["غبي", "نبيه", "كسول", "مغرور"], answer: 1 },
+  lang_ar: [
+    { q: "سؤال عربي 1؟", options: ["أ", "ب"], answer: 0 }
   ],
-  english: [
-    { q: "Synonym of 'smart'?", options: ["Dumb", "Clever", "Lazy", "Mean"], answer: 1 },
+  lang_en: [
+    { q: "English Q1?", options: ["A", "B"], answer: 1 }
   ],
   general: [
-    { q: "أين تقع الأهرامات؟", options: ["القاهرة", "الجيزة", "الأقصر"], answer: 1 },
+    { q: "سؤال معلومات عامة 1؟", options: ["أ", "ب"], answer: 0 }
   ],
   computer: [
-    { q: "ما هو نظام التشغيل؟", options: ["ويندوز", "ورد"], answer: 0 },
+    { q: "سؤال حاسب 1؟", options: ["أ", "ب"], answer: 0 }
   ],
   specialization: [
-    { q: "ما هي لغة تصميم المواقع؟", options: ["HTML", "C++"], answer: 0 },
-  ],
+    { q: "سؤال تخصص 1؟", options: ["أ", "ب"], answer: 1 }
+  ]
 };
 
-const sectionOrder = ["behavior", "job", "iq", "language", "general", "computer", "specialization"];
-
-let currentSectionIndex = 0;
-let currentQuestionIndex = 0;
-let currentSection = "";
-let score = 0;
-let timer;
-let completedSections = {};
-
+// بدء الامتحان من شاشة الترحيب
 function startExam() {
-  document.getElementById("welcome-screen").classList.add("hidden");
-  document.getElementById("section-screen").classList.remove("hidden");
-  document.querySelectorAll(".test_description").forEach(el => {
-    el.addEventListener("click", () => {
-      const id = el.id;
-      if (!completedSections[id]) startSection(id);
-    });
-  });
+  welcomeScreen.classList.add("hidden");
+  sectionScreen.classList.remove("hidden");
 }
 
-function startSection(id) {
-  if (id === "iq") {
-    currentSection = "iq_images";
-    startQuiz();
-  } else if (id === "language") {
-    showLanguageChoice();
-  } else {
-    currentSection = id;
-    startQuiz();
-  }
-}
+// بدء أي محور
+function startSection(sectionId) {
+  if (completedSections.has(sectionId)) return; // لا يبدأ لو تم من قبل
 
-function startQuiz() {
-  document.getElementById("section-screen").classList.add("hidden");
-  document.getElementById("quiz-screen").classList.remove("hidden");
-  currentQuestionIndex = 0;
-  score = 0;
-  loadQuestion();
-}
+  currentSection = sectionId;
+  questionIndex = 0;
 
-function loadQuestion() {
-  const q = allQuestions[currentSection][currentQuestionIndex];
-  document.getElementById("question-container").innerHTML = `
-    <p>${q.q}</p>
-    ${q.options.map((opt, i) => `<label><input type="radio" name="answer" value="${i}"> ${opt}</label><br>`).join("")}
-  `;
-}
-
-function nextQuestion() {
-  const selected = document.querySelector("input[name='answer']:checked");
-  if (selected && parseInt(selected.value) === allQuestions[currentSection][currentQuestionIndex].answer) {
-    score++;
-  }
-  currentQuestionIndex++;
-  if (currentQuestionIndex < allQuestions[currentSection].length) {
-    loadQuestion();
-  } else {
-    if (currentSection === "iq_images") {
-      currentSection = "iq_sequences";
-      currentQuestionIndex = 0;
-      loadQuestion();
-    } else {
-      endQuiz();
-    }
-  }
-}
-
-function endQuiz() {
-  completedSections[currentSection] = true;
-  if (currentSection === "iq_sequences") completedSections["iq"] = true;
-  if (currentSection === "arabic" || currentSection === "english") {
-    if (completedSections["arabic"] && completedSections["english"]) {
-      showNextSection();
-    } else {
-      showLanguageChoice();
-    }
-  } else {
-    showNextSection();
-  }
-}
-
-function showNextSection() {
-  document.getElementById("quiz-screen").classList.add("hidden");
-  document.getElementById("next-section-screen").classList.remove("hidden");
-  const nextSectionId = sectionOrder.find(s => !completedSections[s]);
-  if (!nextSectionId) {
-    document.getElementById("next-section-screen").innerHTML = `<h2>انتهت جميع المحاور</h2>`;
+  // حالة خاصة لـ IQ: يبدأ بالصور
+  if (sectionId === "iq") {
+    currentQuestions = [...questions.iq_images];
+  } else if (sectionId === "language") {
+    sectionScreen.classList.add("hidden");
+    languageScreen.classList.remove("hidden");
     return;
+  } else {
+    currentQuestions = [...questions[sectionId]];
   }
-  document.getElementById("next-section-screen").innerHTML = `
-    <h2>انتهى المحور</h2>
-    <p>المحور التالي:</p>
-    <div class="test_description">
-      <img src="${document.getElementById(nextSectionId).querySelector("img").src}" />
-      <li class="active_test">${document.getElementById(nextSectionId).querySelector("li").textContent}</li>
-    </div>
-    <button onclick="startSection('${nextSectionId}')">ابدأ الآن</button>
+
+  sectionScreen.classList.add("hidden");
+  quizScreen.classList.remove("hidden");
+  showQuestion();
+  startTimer(60); // 60 ثانية كمثال
+}
+
+// عرض السؤال الحالي
+function showQuestion() {
+  const container = document.getElementById("question-container");
+  const q = currentQuestions[questionIndex];
+  container.innerHTML = `
+    <div>${q.q}</div>
+    ${q.options.map((opt, i) => `<button onclick="nextQuestion(${i})">${opt}</button>`).join("<br>")}
   `;
 }
 
-function showLanguageChoice() {
-  document.getElementById("quiz-screen").classList.add("hidden");
-  document.getElementById("result-screen").classList.remove("hidden");
-  document.getElementById("result-screen").innerHTML = `
-    <h2>اختر اختبار اللغة:</h2>
-    <div class="language-icons">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Flag_of_Egypt.svg" 
-           width="100" onclick="currentSection='arabic'; startQuiz()" ${completedSections["arabic"] ? "style='opacity:0.5;pointer-events:none;'" : ""}>
-      <img src="https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg" 
-           width="100" onclick="currentSection='english'; startQuiz()" ${completedSections["english"] ? "style='opacity:0.5;pointer-events:none;'" : ""}>
-    </div>
-  `;
+// التالي
+function nextQuestion(selected) {
+  questionIndex++;
+  if (questionIndex < currentQuestions.length) {
+    showQuestion();
+  } else {
+    clearInterval(timerInterval);
+
+    // لو في IQ (صور → متتاليات)
+    if (currentSection === "iq" && currentQuestions === questions.iq_images) {
+      currentQuestions = [...questions.iq_sequences];
+      questionIndex = 0;
+      showQuestion();
+      startTimer(60);
+      return;
+    }
+
+    completedSections.add(currentSection);
+    showNextSectionScreen();
+  }
 }
+
+// المؤقت
+function startTimer(seconds) {
+  const timerEl = document.getElementById("timer");
+  let time = seconds;
+  timerEl.textContent = `الوقت: ${time}`;
+  timerInterval = setInterval(() => {
+    time--;
+    timerEl.textContent = `الوقت: ${time}`;
+    if (time <= 0) {
+      clearInterval(timerInterval);
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+// شاشة "انتهى المحور"
+function showNextSectionScreen() {
+  quizScreen.classList.add("hidden");
+  languageScreen.classList.add("hidden");
+  nextSectionScreen.classList.remove("hidden");
+
+  const allSections = ["behavior","job","iq","language","general","computer","specialization"];
+  const currentIndex = allSections.indexOf(currentSection);
+  const nextId = allSections[currentIndex + 1];
+
+  if (nextId) {
+    const nextEl = document.querySelector(`#${nextId} img`);
+    const nextName = document.querySelector(`#${nextId} li`).textContent;
+
+    nextSectionScreen.innerHTML = `
+      <h2>انتهى المحور</h2>
+      <p>المحور القادم:</p>
+      <img src="${nextEl.src}" alt="${nextName}">
+      <h3>${nextName}</h3>
+      <button onclick="goToSectionScreen()">الذهاب لاختيار المحور</button>
+    `;
+  } else {
+    nextSectionScreen.innerHTML = `<h2>انتهت كل المحاور ✅</h2>`;
+  }
+
+  // تعطيل المحور اللي خلص
+  document.querySelector(`#${currentSection} li`).classList.remove("active_test");
+  document.querySelector(`#${currentSection} li`).classList.add("disactive_test");
+}
+
+// رجوع لقائمة المحاور
+function goToSectionScreen() {
+  nextSectionScreen.classList.add("hidden");
+  sectionScreen.classList.remove("hidden");
+}
+
+// أحداث اختيار المحاور
+document.querySelectorAll(".test_description").forEach(item => {
+  item.addEventListener("click", () => {
+    startSection(item.id);
+  });
+});
+
+// أحداث اختيار اللغة
+document.getElementById("lang-ar").addEventListener("click", () => {
+  currentSection = "lang_ar";
+  currentQuestions = [...questions.lang_ar];
+  questionIndex = 0;
+  languageScreen.classList.add("hidden");
+  quizScreen.classList.remove("hidden");
+  showQuestion();
+  startTimer(60);
+});
+
+document.getElementById("lang-en").addEventListener("click", () => {
+  currentSection = "lang_en";
+  currentQuestions = [...questions.lang_en];
+  questionIndex = 0;
+  languageScreen.classList.add("hidden");
+  quizScreen.classList.remove("hidden");
+  showQuestion();
+  startTimer(60);
+});
