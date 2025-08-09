@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>نظام امتحان الجهاز المركزي</title>
-    <link rel="stylesheet" href="./css.css" />
+    <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
     <div class="container" id="main-container">
@@ -18,10 +18,7 @@
       <div id="section-screen" class="hidden">
         <h3 style="color: red">نفيدكم علماً بالتالي</h3>
         <ul>
-          <li>
-            ترتيب الامتحانات كما هو موضح بالشكل التالي ابتداءً بامتحانات الجدرات
-            السلوكية.
-          </li>
+          <li>ترتيب الامتحانات كما هو موضح بالشكل التالي.</li>
           <li>حفظ الإجابة يتم باختيار إحدى الإجابات ثم الضغط على التالي.</li>
         </ul>
 
@@ -32,63 +29,73 @@
           <span>غير مفعل</span>
         </div>
 
-        <ol>
-          <div class="test_description">
-            <img src="./01-B.png" />
+        <ol id="sections-list">
+          <div class="test_description" id="behavior">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Thinking-woman.jpg"
+            />
             <li class="active_test">جدارات سلوكية</li>
             <p>اختبار لقياس ١٢ سمة شخصية</p>
           </div>
-          <div class="test_description">
-            <img src="./images.jpg" />
+          <div class="test_description" id="job">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/7/77/Teamwork.jpg"
+            />
             <li class="disactive_test">جدارات وظيفية</li>
             <p>قياس الجدارات المطلوبة للمجال</p>
           </div>
-          <div class="test_description">
-            <img src="download.png" />
-            <li class="disactive_test">اختبار صور (IQ)</li>
-            <p>تحليل الأنماط البصرية</p>
+          <div class="test_description" id="iq">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Puzzle.jpg"
+            />
+            <li class="disactive_test">اختبار الذكاء (صور + متتاليات)</li>
+            <p>تحليل الأنماط البصرية والعددية</p>
           </div>
-          <div class="test_description">
-            <img src="./sequence.png" />
-            <li class="disactive_test">اختبار متتاليات</li>
-            <p>تحليل الأنماط العددية</p>
+          <div class="test_description" id="language">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Language.jpg"
+            />
+            <li class="disactive_test">اللغة (عربي / إنجليزي)</li>
+            <p>اختبار اللغتين</p>
           </div>
-          <div class="test_description">
-            <img src="./language.png" />
-            <li class="disactive_test">اللغة (عربي/إنجليزي)</li>
-            <p>اختيار أحد اللغتين ثم الآخر</p>
-          </div>
-          <div class="test_description">
-            <img src="./general.png" />
+          <div class="test_description" id="general">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/f/f7/World-map.jpg"
+            />
             <li class="disactive_test">معلومات عامة</li>
-            <p>معرفة عامة (تاريخ، جغرافيا...)</p>
+            <p>تاريخ، جغرافيا...</p>
           </div>
-          <div class="test_description">
-            <img src="./computer.png" />
+          <div class="test_description" id="computer">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/5/51/Laptop.jpg"
+            />
             <li class="disactive_test">الحاسب</li>
-            <p>العربية أو الإنجليزية</p>
+            <p>عربي أو إنجليزي</p>
           </div>
-          <div class="test_description">
-            <img src="./specialist.png" />
+          <div class="test_description" id="specialization">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/3/3b/Workstation.jpg"
+            />
             <li class="disactive_test">التخصص</li>
-            <p>اختبار في التخصص المطلوب</p>
+            <p>اختبار التخصص المطلوب</p>
           </div>
         </ol>
-
-        <button onclick="startBehaviorTest()">بدء الامتحان</button>
       </div>
 
-      <!-- واجهات باقي المحاور سيتم إضافتها في ملف js.js -->
-      <div id="behavior-screen" class="hidden"></div>
+      <!-- شاشة الامتحان -->
       <div id="quiz-screen" class="hidden">
         <div id="timer">الوقت:</div>
         <div id="question-container"></div>
         <button id="next-button" onclick="nextQuestion()">التالي</button>
       </div>
+
+      <!-- شاشة النتيجة -->
       <div id="result-screen" class="hidden"></div>
+
+      <!-- شاشة الانتقال للمحور التالي -->
       <div id="next-section-screen" class="hidden"></div>
     </div>
 
-    <script src="./js.js"></script>
+    <script src="./script.js"></script>
   </body>
 </html>
