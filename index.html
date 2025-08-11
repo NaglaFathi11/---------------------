@@ -336,22 +336,12 @@
       }
 
       function launchQuiz(sectionKey) {
-        if (sectionKey === "iq") {
-          // ابدأ الصور أولاً
-          currentSection = "iq_images";
-          currentQuestionIndex = 0;
-          score = 0;
-          showQuizScreen();
-          loadQuestion();
-          startTimer();
-        } else {
-          currentSection = sectionKey;
-          currentQuestionIndex = 0;
-          score = 0;
-          showQuizScreen();
-          loadQuestion();
-          startTimer();
-        }
+        currentSection = sectionKey;
+        currentQuestionIndex = 0;
+        score = 0;
+        showQuizScreen();
+        loadQuestion();
+        startTimer();
       }
 
       function showQuizScreen() {
@@ -411,21 +401,11 @@
         clearInterval(timer);
         document.getElementById("quiz-screen").classList.add("hidden");
 
-        // حالة الـ IQ: بعد الصور يبدأ المتتاليات
         if (currentSection === "iq_images") {
-          currentSection = "iq_sequences";
-          currentQuestionIndex = 0;
-          score = 0;
-          showQuizScreen();
-          loadQuestion();
-          startTimer();
-          return;
-        } else if (currentSection === "iq_sequences") {
-          showNextSectionScreen();
+          launchQuiz("iq_sequences");
           return;
         }
 
-        // حالة اللغة
         if (currentSection === "arabic" || currentSection === "english") {
           sectionDone[currentSection] = true;
           if (sectionDone.arabic && sectionDone.english) {
@@ -444,8 +424,13 @@
           .getElementById("next-section-screen")
           .classList.remove("hidden");
         const nextSection = sectionOrder[currentSectionIndex + 1];
+        if (!nextSection) {
+          document.getElementById(
+            "next-section-screen"
+          ).innerHTML = `<h2>انتهت جميع المحاور</h2>`;
+          return;
+        }
         const nextName = translateSection(nextSection);
-
         document.getElementById("next-section-screen").innerHTML = `
     <h2>انتهى المحور: ${translateSection(currentSection)}</h2>
     <p>المحور التالي:</p>
@@ -466,7 +451,9 @@
           alert("انتهت جميع المحاور!");
           return;
         }
-        if (next === "language") {
+        if (next === "iq") {
+          launchQuiz("iq_images");
+        } else if (next === "language") {
           showLanguageChoice();
         } else {
           launchQuiz(next);
@@ -476,20 +463,20 @@
       function showLanguageChoice() {
         document.getElementById("result-screen").classList.remove("hidden");
         document.getElementById("result-screen").innerHTML = `
-          <h2>اختر اختبار اللغة:</h2>
-          <div class="lang-buttons">
-            <button onclick="launchQuiz('arabic')" ${
-              sectionDone.arabic ? "disabled" : ""
-            }>
-              <img src="https://i.ibb.co/0VPHn2C/language.jpg" /> عربي
-            </button>
-            <button onclick="launchQuiz('english')" ${
-              sectionDone.english ? "disabled" : ""
-            }>
-              <img src="https://i.ibb.co/0VPHn2C/language.jpg" /> English
-            </button>
-          </div>
-        `;
+    <h2>اختر اختبار اللغة:</h2>
+    <div class="lang-buttons">
+      <button onclick="launchQuiz('arabic')" ${
+        sectionDone.arabic ? "disabled" : ""
+      }>
+        <img src="https://i.ibb.co/0VPHn2C/language.jpg" /> عربي
+      </button>
+      <button onclick="launchQuiz('english')" ${
+        sectionDone.english ? "disabled" : ""
+      }>
+        <img src="https://i.ibb.co/0VPHn2C/language.jpg" /> English
+      </button>
+    </div>
+  `;
       }
 
       function translateSection(key) {
